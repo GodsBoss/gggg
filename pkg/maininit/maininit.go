@@ -3,10 +3,10 @@
 package maininit
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/GodsBoss/gggg/pkg/dom"
+	"github.com/GodsBoss/gggg/pkg/errors"
 )
 
 type Game interface {
@@ -36,7 +36,7 @@ func Run(game Game) {
 func run(game Game) error {
 	tps := game.Config().TicksPerSecond()
 	if tps <= 0 || tps > 1000 {
-		return fmt.Errorf("0 < tps <= 1000 is violated")
+		return errors.NewString("0 < tps <= 1000 is violated")
 	}
 	w, err := dom.GlobalWindow()
 	if err != nil {
