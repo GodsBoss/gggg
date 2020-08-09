@@ -62,3 +62,7 @@ func (w *Window) RequestAnimationFrame(f func()) {
 		),
 	)
 }
+
+func (w *Window) InnerSize() (width int, height int) {
+	return w.getValue().Get("innerWidth").Int(), w.getValue().Get("innerHeight")
+}
