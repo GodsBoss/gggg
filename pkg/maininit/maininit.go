@@ -21,7 +21,6 @@ type Game interface {
 
 // Config are a few parameters needed to setup the game.
 type Config interface {
-	GraphicsSize() (width int, height int)
 	TicksPerSecond() int
 }
 
@@ -29,6 +28,10 @@ type Config interface {
 type Renderer interface {
 	SetOutput(ctx2d *dom.Context2D)
 	Render()
+
+	// Scale takes the available size and returns the real size of the canvas the renderer
+	// will perform on.
+	Scale(availableWidth, availableHeight int) (realWidth, realHeight int)
 }
 
 // Logic is the game logic.
@@ -59,8 +62,7 @@ func run(game Game) error {
 	if err != nil {
 		return err
 	}
-	gameWidth, gameHeight := game.Config().GraphicsSize()
-	canvas.SetSize(gameWidth, gameHeight)
+	resizeCanvas(game.Renderer(), window, canvas)
 	gameElement, err := document.GetElementByID("game")
 	if err != nil {
 		return err
@@ -139,4 +141,8 @@ func passGameEvents(logic Logic, window *dom.Window, canvas *dom.Canvas) {
 			logic.ReceiveMouseEvent(dominteraction.FromMouseEvent(interaction.MouseMove, event))
 		},
 	)
+}
+
+func resizeCanvas(renderer Renderer, window *dom.Window, canvas *dom.Canvas) {
+	canvas.SetSize(renderer.Scale(window.InnerSize()))
 }
