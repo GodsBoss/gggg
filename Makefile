@@ -14,9 +14,13 @@ dist/examples/%/index.html: examples/example.html
 dist/examples:
 	mkdir -p $@
 
+serve:
+	SERVE_DIR=$${PWD}/dist/examples go run ./examples/serve.go
+
 clean:
 	rm -rf dist
 
 .PHONY: \
 	all \
-	clean
+	clean \
+	serve
