@@ -34,25 +34,25 @@ func Run(game Game) {
 }
 
 func run(game Game) error {
-	tps := game.Config().TicksPerSecond()
-	if tps <= 0 || tps > 1000 {
-		return errors.NewString("0 < tps <= 1000 is violated")
+	ticksPerSecond := game.Config().TicksPerSecond()
+	if ticksPerSecond <= 0 || ticksPerSecond > 1000 {
+		return errors.NewString("0 < ticksPerSecond <= 1000 is violated")
 	}
-	w, err := dom.GlobalWindow()
+	window, err := dom.GlobalWindow()
 	if err != nil {
 		return err
 	}
-	doc, err := w.Document()
+	document, err := window.Document()
 	if err != nil {
 		return err
 	}
-	canvas, err := doc.CreateCanvasElement()
+	canvas, err := document.CreateCanvasElement()
 	if err != nil {
 		return err
 	}
 	gameWidth, gameHeight := game.Config().GraphicsSize()
 	canvas.SetSize(gameWidth, gameHeight)
-	gameElement, err := doc.GetElementByID("game")
+	gameElement, err := document.GetElementByID("game")
 	if err != nil {
 		return err
 	}
@@ -79,10 +79,10 @@ func run(game Game) error {
 	// Setup render loop.
 	var reqAnimationFrameCallback func()
 	reqAnimationFrameCallback = func() {
-		w.RequestAnimationFrame(reqAnimationFrameCallback)
+		window.RequestAnimationFrame(reqAnimationFrameCallback)
 		game.Renderer().Render()
 	}
-	w.RequestAnimationFrame(reqAnimationFrameCallback)
+	window.RequestAnimationFrame(reqAnimationFrameCallback)
 
 	return nil
 }
