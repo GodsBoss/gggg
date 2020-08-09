@@ -9,22 +9,26 @@ import (
 	"github.com/GodsBoss/gggg/pkg/errors"
 )
 
+// Game represents the game as a whole - configuration, rendering and logic.
 type Game interface {
 	Config() Config
 	Renderer() Renderer
 	Loop() Loop
 }
 
+// Config are a few parameters needed to setup the game.
 type Config interface {
 	GraphicsSize() (width int, height int)
 	TicksPerSecond() int
 }
 
+// Renderer renders the game into a given output.
 type Renderer interface {
 	SetOutput(ctx2d *dom.Context2D)
 	Render()
 }
 
+// Loop is the game logic.
 type Loop interface {
 	Tick(ms int)
 }
