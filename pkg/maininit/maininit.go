@@ -68,7 +68,7 @@ func run(game Game) error {
 
 	// Setup game loop.
 	go func() {
-		msPerTick := 1000 / game.Config().TicksPerSecond()
+		msPerTick := 1000 / ticksPerSecond
 		ticker := time.NewTicker(time.Millisecond * time.Duration(msPerTick))
 		for {
 			<-ticker.C
