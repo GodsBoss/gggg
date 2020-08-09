@@ -13,7 +13,7 @@ import (
 type Game interface {
 	Config() Config
 	Renderer() Renderer
-	Loop() Loop
+	Logic() Logic
 }
 
 // Config are a few parameters needed to setup the game.
@@ -28,8 +28,8 @@ type Renderer interface {
 	Render()
 }
 
-// Loop is the game logic.
-type Loop interface {
+// Logic is the game logic.
+type Logic interface {
 	Tick(ms int)
 }
 
@@ -71,7 +71,7 @@ func run(game Game) error {
 	game.Renderer().SetOutput(context2D)
 
 	// Setup game loop.
-	go runGameLoop(1000/ticksPerSecond, game.Loop())
+	go runGameLoop(1000/ticksPerSecond, game.Logic())
 
 	// Setup render loop.
 	runRendering(window, game.Renderer())
@@ -79,11 +79,11 @@ func run(game Game) error {
 	return nil
 }
 
-func runGameLoop(msPerTick int, loop Loop) {
+func runGameLoop(msPerTick int, logic Logic) {
 	ticker := time.NewTicker(time.Millisecond * time.Duration(msPerTick))
 	for {
 		<-ticker.C
-		loop.Tick(msPerTick)
+		logic.Tick(msPerTick)
 	}
 }
 
