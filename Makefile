@@ -1,4 +1,8 @@
-all: dist/examples/wasm_exec.js dist/examples/wasd/main.wasm dist/examples/wasd/index.html
+examples=$(shell ls -I serve.go -I example.html examples)
+
+all: \
+	dist/examples/wasm_exec.js \
+	$(foreach example,$(examples),dist/examples/$(example)/main.wasm dist/examples/$(example)/index.html)
 
 dist/examples/wasm_exec.js: $(GOROOT)/misc/wasm/wasm_exec.js dist/examples
 	cp $< $@
