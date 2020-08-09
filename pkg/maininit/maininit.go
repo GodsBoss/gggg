@@ -3,10 +3,13 @@
 package maininit
 
 import (
+	"syscall/js"
 	"time"
 
 	"github.com/GodsBoss/gggg/pkg/dom"
 	"github.com/GodsBoss/gggg/pkg/errors"
+	"github.com/GodsBoss/gggg/pkg/interaction"
+	"github.com/GodsBoss/gggg/pkg/interaction/dominteraction"
 )
 
 // Game represents the game as a whole - configuration, rendering and logic.
@@ -31,6 +34,8 @@ type Renderer interface {
 // Logic is the game logic.
 type Logic interface {
 	Tick(ms int)
+	ReceiveKeyEvent(event interaction.KeyEvent)
+	ReceiveMouseEvent(event interaction.MouseEvent)
 }
 
 func Run(game Game) {
@@ -76,6 +81,8 @@ func run(game Game) error {
 	// Setup render loop.
 	runRendering(window, game.Renderer())
 
+	passGameEvents(game.Logic(), window, canvas)
+
 	return nil
 }
 
@@ -94,4 +101,42 @@ func runRendering(window *dom.Window, renderer Renderer) {
 		renderer.Render()
 	}
 	window.RequestAnimationFrame(reqAnimationFrameCallback)
+}
+
+func passGameEvents(logic Logic, window *dom.Window, canvas *dom.Canvas) {
+	dom.AddEventListener(
+		window,
+		"keydown",
+		func(event js.Value) {
+			logic.ReceiveKeyEvent(dominteraction.FromKeyEvent(interaction.KeyDown, event))
+		},
+	)
+	dom.AddEventListener(
+		window,
+		"keyup",
+		func(event js.Value) {
+			logic.ReceiveKeyEvent(dominteraction.FromKeyEvent(interaction.KeyUp, event))
+		},
+	)
+	dom.AddEventListener(
+		canvas,
+		"mousedown",
+		func(event js.Value) {
+			logic.ReceiveMouseEvent(dominteraction.FromMouseEvent(interaction.MouseDown, event))
+		},
+	)
+	dom.AddEventListener(
+		canvas,
+		"mouseup",
+		func(event js.Value) {
+			logic.ReceiveMouseEvent(dominteraction.FromMouseEvent(interaction.MouseUp, event))
+		},
+	)
+	dom.AddEventListener(
+		canvas,
+		"mousemove",
+		func(event js.Value) {
+			logic.ReceiveMouseEvent(dominteraction.FromMouseEvent(interaction.MouseMove, event))
+		},
+	)
 }
