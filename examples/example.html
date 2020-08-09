@@ -1,0 +1,24 @@
+<html>
+	<head>
+    <title>Example</title>
+		<meta charset="utf-8"/>
+		<script src="../wasm_exec.js"></script>
+		<script>
+			const go = new Go();
+			WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+				go.run(result.instance);
+			});
+		</script>
+		<style type="text/css">
+			#game canvas {
+				border:1px solid #666;
+				display:block;
+				margin-left:auto;
+				margin-right:auto;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="game"></div>
+	</body>
+</html>
