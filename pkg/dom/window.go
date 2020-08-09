@@ -3,6 +3,8 @@
 package dom
 
 import (
+	"github.com/GodsBoss/gggg/pkg/errors"
+
 	"syscall/js"
 )
 
@@ -15,7 +17,7 @@ type Window struct {
 // NewWindow creates a Window instance.
 func NewWindow(jsWindow js.Value) (*Window, error) {
 	if jsWindow.IsNull() {
-		return nil, newError("window object must not be null")
+		return nil, errors.NewString("window object must not be null")
 	}
 	return &Window{
 		value: jsWindow,
@@ -42,7 +44,7 @@ func (w *Window) getJSNode() js.Value {
 func (w *Window) Document() (*Document, error) {
 	jsDoc := w.getValue().Get("document")
 	if jsDoc.IsNull() {
-		return nil, newError("document object does not exist")
+		return nil, errors.NewString("document object does not exist")
 	}
 	return &Document{
 		value: jsDoc,

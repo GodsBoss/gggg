@@ -3,6 +3,8 @@
 package dom
 
 import (
+	"github.com/GodsBoss/gggg/pkg/errors"
+
 	"syscall/js"
 )
 
@@ -31,7 +33,7 @@ func (canvas *Canvas) SetHeight(height int) {
 func (canvas *Canvas) Context2D() (*Context2D, error) {
 	jsCtx := canvas.value.Call("getContext", "2d")
 	if jsCtx.IsNull() {
-		return nil, newError("2d context not supported")
+		return nil, errors.NewString("2d context not supported")
 	}
 	return &Context2D{
 		value: jsCtx,
