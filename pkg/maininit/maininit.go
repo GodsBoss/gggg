@@ -70,12 +70,7 @@ func run(game Game) error {
 	go runGameLoop(1000/ticksPerSecond, game.Loop())
 
 	// Setup render loop.
-	var reqAnimationFrameCallback func()
-	reqAnimationFrameCallback = func() {
-		window.RequestAnimationFrame(reqAnimationFrameCallback)
-		game.Renderer().Render()
-	}
-	window.RequestAnimationFrame(reqAnimationFrameCallback)
+	runRendering(window, game.Renderer())
 
 	return nil
 }
@@ -86,4 +81,13 @@ func runGameLoop(msPerTick int, loop Loop) {
 		<-ticker.C
 		loop.Tick(msPerTick)
 	}
+}
+
+func runRendering(window *dom.Window, renderer Renderer) {
+	var reqAnimationFrameCallback func()
+	reqAnimationFrameCallback = func() {
+		window.RequestAnimationFrame(reqAnimationFrameCallback)
+		renderer.Render()
+	}
+	window.RequestAnimationFrame(reqAnimationFrameCallback)
 }
