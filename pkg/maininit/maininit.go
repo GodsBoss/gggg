@@ -85,6 +85,14 @@ func run(game Game) error {
 
 	passGameEvents(game.Logic(), window, canvas)
 
+	dom.AddEventListener(
+		window,
+		"resize",
+		func(_ js.Value) {
+			resizeCanvas(game.Renderer(), window, canvas)
+		},
+	)
+
 	return nil
 }
 
