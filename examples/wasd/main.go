@@ -7,10 +7,26 @@ import (
 )
 
 func main() {
-	maininit.Run(&game{})
+	win, _ := dom.GlobalWindow()
+	doc, _ := win.Document()
+	sprite, _ := doc.CreateImageElement("../assets/small_square.png")
+	maininit.Run(
+		&game{
+			sprite: sprite,
+		},
+	)
+	<-make(chan struct{}, 0)
 }
 
-type game struct{}
+type game struct {
+	sprite *dom.Image
+	output *dom.Context2D
+
+	left  int
+	right int
+	down  int
+	up    int
+}
 
 func (g *game) Config() maininit.Config {
 	return maininit.SimpleConfig{
@@ -24,7 +40,32 @@ func (g *game) Logic() maininit.Logic {
 
 func (g *game) Tick(ms int) {}
 
-func (g *game) ReceiveKeyEvent(event interaction.KeyEvent) {}
+func (g *game) ReceiveKeyEvent(event interaction.KeyEvent) {
+	if event.Type == interaction.KeyDown {
+		switch event.Key {
+		case "w":
+			g.up = 1
+		case "a":
+			g.left = 1
+		case "s":
+			g.down = 1
+		case "d":
+			g.right = 1
+		}
+	}
+	if event.Type == interaction.KeyUp {
+		switch event.Key {
+		case "w":
+			g.up = 0
+		case "a":
+			g.left = 0
+		case "s":
+			g.down = 0
+		case "d":
+			g.right = 0
+		}
+	}
+}
 
 func (g *game) ReceiveMouseEvent(event interaction.MouseEvent) {}
 
@@ -32,9 +73,16 @@ func (g *game) Renderer() maininit.Renderer {
 	return g
 }
 
-func (g *game) SetOutput(ctx2d *dom.Context2D) {}
+func (g *game) SetOutput(ctx2d *dom.Context2D) {
+	g.output = ctx2d
+}
 
-func (g *game) Render() {}
+func (g *game) Render() {
+	g.output.ClearRect(0, 0, 640, 400)
+	x := 320 + (g.right-g.left)*160 - 10
+	y := 200 + (g.down-g.up)*100 - 10
+	g.output.DrawImage(g.sprite, 0, 0, 20, 20, x, y, 20, 20)
+}
 
 func (g *game) Scale(availableWidth, availableHeight int) (realWidth, realHeight int) {
 	return 640, 400
