@@ -84,6 +84,6 @@ func (g *game) Render() {
 	g.output.DrawImage(g.sprite, 0, 0, 20, 20, x, y, 20, 20)
 }
 
-func (g *game) Scale(availableWidth, availableHeight int) (realWidth, realHeight int) {
-	return 640, 400
+func (g *game) Scale(availableWidth, availableHeight int) (realWidth, realHeight int, xScale, yScale float64) {
+	return 640, 400, 1.0, 1.0
 }

@@ -30,8 +30,8 @@ type Renderer interface {
 	Render()
 
 	// Scale takes the available size and returns the real size of the canvas the renderer
-	// will perform on.
-	Scale(availableWidth, availableHeight int) (realWidth, realHeight int)
+	// will perform on. It also returns a scaling factor.
+	Scale(availableWidth, availableHeight int) (realWidth, realHeight int, scaleX, scaleY float64)
 }
 
 // Logic is the game logic.
@@ -62,7 +62,10 @@ func run(game Game) error {
 	if err != nil {
 		return err
 	}
-	resizeCanvas(game.Renderer(), window, canvas)
+	mouseXYScaler := &mouseEventCoordinateScaler{}
+	rw, rh, xf, yf := game.Renderer().Scale(window.InnerSize())
+	canvas.SetSize(rw, rh)
+	mouseXYScaler.setScaling(xf, yf)
 	gameElement, err := document.GetElementByID("game")
 	if err != nil {
 		return err
@@ -83,13 +86,15 @@ func run(game Game) error {
 	// Setup render loop.
 	runRendering(window, game.Renderer())
 
-	passGameEvents(game.Logic(), window, canvas)
+	passGameEvents(game.Logic(), window, canvas, mouseXYScaler)
 
 	dom.AddEventListener(
 		window,
 		"resize",
 		func(_ js.Value) {
-			resizeCanvas(game.Renderer(), window, canvas)
+			rw, rh, xf, yf := game.Renderer().Scale(window.InnerSize())
+			canvas.SetSize(rw, rh)
+			mouseXYScaler.setScaling(xf, yf)
 		},
 	)
 
@@ -113,7 +118,7 @@ func runRendering(window *dom.Window, renderer Renderer) {
 	window.RequestAnimationFrame(reqAnimationFrameCallback)
 }
 
-func passGameEvents(logic Logic, window *dom.Window, canvas *dom.Canvas) {
+func passGameEvents(logic Logic, window *dom.Window, canvas *dom.Canvas, scaler *mouseEventCoordinateScaler) {
 	dom.AddEventListener(
 		window,
 		"keydown",
@@ -132,25 +137,37 @@ func passGameEvents(logic Logic, window *dom.Window, canvas *dom.Canvas) {
 		canvas,
 		"mousedown",
 		func(event js.Value) {
-			logic.ReceiveMouseEvent(dominteraction.FromMouseEvent(interaction.MouseDown, event))
+			logic.ReceiveMouseEvent(scaler.scale(dominteraction.FromMouseEvent(interaction.MouseDown, event)))
 		},
 	)
 	dom.AddEventListener(
 		canvas,
 		"mouseup",
 		func(event js.Value) {
-			logic.ReceiveMouseEvent(dominteraction.FromMouseEvent(interaction.MouseUp, event))
+			logic.ReceiveMouseEvent(scaler.scale(dominteraction.FromMouseEvent(interaction.MouseUp, event)))
 		},
 	)
 	dom.AddEventListener(
 		canvas,
 		"mousemove",
 		func(event js.Value) {
-			logic.ReceiveMouseEvent(dominteraction.FromMouseEvent(interaction.MouseMove, event))
+			logic.ReceiveMouseEvent(scaler.scale(dominteraction.FromMouseEvent(interaction.MouseMove, event)))
 		},
 	)
 }
 
-func resizeCanvas(renderer Renderer, window *dom.Window, canvas *dom.Canvas) {
-	canvas.SetSize(renderer.Scale(window.InnerSize()))
+type mouseEventCoordinateScaler struct {
+	xFactor float64
+	yFactor float64
+}
+
+func (scaler *mouseEventCoordinateScaler) scale(ev interaction.MouseEvent) interaction.MouseEvent {
+	ev.X = int(float64(ev.X) * scaler.xFactor)
+	ev.Y = int(float64(ev.Y) * scaler.yFactor)
+	return ev
+}
+
+func (scaler *mouseEventCoordinateScaler) setScaling(x, y float64) {
+	scaler.xFactor = x
+	scaler.yFactor = y
 }
