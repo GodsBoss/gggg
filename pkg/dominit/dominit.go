@@ -1,6 +1,6 @@
 // build js,wasm
 
-package maininit
+package dominit
 
 import (
 	"syscall/js"

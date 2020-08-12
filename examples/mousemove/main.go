@@ -2,15 +2,15 @@ package main
 
 import (
 	"github.com/GodsBoss/gggg/pkg/dom"
+	"github.com/GodsBoss/gggg/pkg/dominit"
 	"github.com/GodsBoss/gggg/pkg/interaction"
-	"github.com/GodsBoss/gggg/pkg/maininit"
 )
 
 func main() {
 	win, _ := dom.GlobalWindow()
 	doc, _ := win.Document()
 	sprite, _ := doc.CreateImageElement("../assets/small_square.png")
-	maininit.Run(
+	dominit.Run(
 		&game{
 			sprite: sprite,
 		},
@@ -26,13 +26,13 @@ type game struct {
 	y int
 }
 
-func (g *game) Config() maininit.Config {
-	return maininit.SimpleConfig{
+func (g *game) Config() dominit.Config {
+	return dominit.SimpleConfig{
 		TPS: 40,
 	}
 }
 
-func (g *game) Logic() maininit.Logic {
+func (g *game) Logic() dominit.Logic {
 	return g
 }
 
@@ -45,7 +45,7 @@ func (g *game) ReceiveMouseEvent(event interaction.MouseEvent) {
 	g.y = event.Y
 }
 
-func (g *game) Renderer() maininit.Renderer {
+func (g *game) Renderer() dominit.Renderer {
 	return g
 }
 

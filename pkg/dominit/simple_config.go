@@ -1,4 +1,4 @@
-package maininit
+package dominit
 
 // SimpleConfig is a simple implementation of Config.
 type SimpleConfig struct {
