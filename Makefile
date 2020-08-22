@@ -1,15 +1,18 @@
 examples=$(shell ls -I serve.go -I example.html -I assets examples)
 assets=$(shell ls examples/assets)
+wasms=$(foreach example,$(examples),dist/examples/$(example)/main.wasm)
+webfiles=$(foreach example,$(examples),dist/examples/$(example)/index.html)
 
 all: \
 	dist/examples/wasm_exec.js \
-	$(foreach example,$(examples),dist/examples/$(example)/main.wasm dist/examples/$(example)/index.html) \
-	$(foreach asset,$(assets),dist/examples/assets/$(asset))
+	$(foreach asset,$(assets),dist/examples/assets/$(asset)) \
+	$(wasms) \
+	$(webfiles)
 
 dist/examples/wasm_exec.js: $(GOROOT)/misc/wasm/wasm_exec.js dist/examples
 	cp $< $@
 
-dist/examples/%/main.wasm:
+dist/examples/%/main.wasm: FORCE
 	mkdir -p dist/examples/$*
 	GOOS=js GOARCH=wasm go build -o $@ ./examples/$*/main.go
 
@@ -34,3 +37,5 @@ clean:
 	all \
 	clean \
 	serve
+
+FORCE:
