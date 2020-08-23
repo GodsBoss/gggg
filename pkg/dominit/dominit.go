@@ -14,9 +14,9 @@ import (
 
 // Game represents the game as a whole - configuration, rendering and logic.
 type Game interface {
-	Config() Config
-	Renderer() Renderer
-	Logic() Logic
+	Config
+	Renderer
+	Logic
 }
 
 // Config are a few parameters needed to setup the game.
@@ -46,7 +46,7 @@ func Run(game Game) {
 }
 
 func run(game Game) error {
-	ticksPerSecond := game.Config().TicksPerSecond()
+	ticksPerSecond := game.TicksPerSecond()
 	if ticksPerSecond <= 0 || ticksPerSecond > 1000 {
 		return errors.NewString("0 < ticksPerSecond <= 1000 is violated")
 	}
@@ -63,7 +63,7 @@ func run(game Game) error {
 		return err
 	}
 	mouseXYScaler := &mouseEventCoordinateScaler{}
-	rw, rh, xf, yf := game.Renderer().Scale(window.InnerSize())
+	rw, rh, xf, yf := game.Scale(window.InnerSize())
 	canvas.SetSize(rw, rh)
 	mouseXYScaler.setScaling(xf, yf)
 	gameElement, err := document.GetElementByID("game")
@@ -78,21 +78,21 @@ func run(game Game) error {
 	if err != nil {
 		return err
 	}
-	game.Renderer().SetOutput(context2D)
+	game.SetOutput(context2D)
 
 	// Setup game loop.
-	go runGameLoop(1000/ticksPerSecond, game.Logic())
+	go runGameLoop(1000/ticksPerSecond, game)
 
 	// Setup render loop.
-	runRendering(window, game.Renderer())
+	runRendering(window, game)
 
-	passGameEvents(game.Logic(), window, canvas, mouseXYScaler)
+	passGameEvents(game, window, canvas, mouseXYScaler)
 
 	dom.AddEventListener(
 		window,
 		"resize",
 		func(_ js.Value) {
-			rw, rh, xf, yf := game.Renderer().Scale(window.InnerSize())
+			rw, rh, xf, yf := game.Scale(window.InnerSize())
 			canvas.SetSize(rw, rh)
 			mouseXYScaler.setScaling(xf, yf)
 		},

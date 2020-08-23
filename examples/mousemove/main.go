@@ -26,10 +26,8 @@ type game struct {
 	y int
 }
 
-func (g *game) Config() dominit.Config {
-	return dominit.SimpleConfig{
-		TPS: 40,
-	}
+func (g *game) TicksPerSecond() int {
+	return 40
 }
 
 func (g *game) Logic() dominit.Logic {
