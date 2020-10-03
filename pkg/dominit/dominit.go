@@ -162,8 +162,8 @@ type mouseEventCoordinateScaler struct {
 }
 
 func (scaler *mouseEventCoordinateScaler) scale(ev interaction.MouseEvent) interaction.MouseEvent {
-	ev.X = int(float64(ev.X) * scaler.xFactor)
-	ev.Y = int(float64(ev.Y) * scaler.yFactor)
+	ev.X = int(float64(ev.X) / scaler.xFactor)
+	ev.Y = int(float64(ev.Y) / scaler.yFactor)
 	return ev
 }
 
