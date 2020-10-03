@@ -53,9 +53,9 @@ func (g *game) SetOutput(ctx2d *dom.Context2D) {
 
 func (g *game) Render() {
 	g.output.ClearRect(0, 0, 640, 400)
-	g.output.DrawImage(g.sprite, 0, 0, 20, 20, g.x-10, g.y-10, 20, 20)
+	g.output.DrawImage(g.sprite, 0, 0, 20, 20, (g.x-10)*2, (g.y-10)*2, 20, 20)
 }
 
 func (g *game) Scale(availableWidth, availableHeight int) (realWidth, realHeight int, xScale, yScale float64) {
-	return 640, 400, 1.0, 1.0
+	return 320, 200, 2.0, 2.0
 }
