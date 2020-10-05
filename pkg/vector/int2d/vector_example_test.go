@@ -13,3 +13,13 @@ func ExampleFromXY() {
 	// Output:
 	// (4, 7)
 }
+
+func ExampleAdd() {
+	v1 := int2d.FromXY(-2, 6)
+	v2 := int2d.FromXY(4, 3)
+	v := int2d.Add(v1, v2)
+	fmt.Printf("(%d, %d)\n", v.X(), v.Y())
+
+	// Output:
+	// (2, 9)
+}
