@@ -43,3 +43,29 @@ func TestRotateClockwise(t *testing.T) {
 		)
 	}
 }
+
+func TestRotateCounterclockwise(t *testing.T) {
+	testCases := map[int2d.Vector]int2d.Vector{
+		int2d.Up():    int2d.Left(),
+		int2d.Right(): int2d.Up(),
+		int2d.Down():  int2d.Right(),
+		int2d.Left():  int2d.Down(),
+	}
+
+	for input, expectedResult := range testCases {
+		t.Run(
+			fmt.Sprintf("(%d, %d)", input.X(), input.Y()),
+			func(t *testing.T) {
+				actualResult := int2d.RotateCounterclockwise(input)
+				if actualResult != expectedResult {
+					t.Errorf(
+						"expected RotateCounterclockwise((%d, %d)) to be (%d, %d), but got (%d, %d)",
+						input.X(), input.Y(),
+						expectedResult.X(), expectedResult.Y(),
+						actualResult.X(), actualResult.Y(),
+					)
+				}
+			},
+		)
+	}
+}
