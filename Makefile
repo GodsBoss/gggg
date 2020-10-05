@@ -30,12 +30,21 @@ dist/examples:
 serve:
 	SERVE_DIR=$${PWD}/dist/examples go run ./examples/serve.go
 
+docker-unittest:
+	docker run \
+		--rm \
+		-v $${PWD}:/root/gggg:ro \
+		--workdir /root/gggg \
+		golang:1.15.2 \
+		go test -v -cover ./pkg/...
+
 clean:
 	rm -rf dist
 
 .PHONY: \
 	all \
 	clean \
+	docker-unittest \
 	serve
 
 FORCE:
