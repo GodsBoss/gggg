@@ -23,3 +23,11 @@ func ExampleAdd() {
 	// Output:
 	// (2, 9)
 }
+
+func ExampleMultiply() {
+	v := int2d.Multiply(int2d.FromXY(3, -7), 4)
+	fmt.Printf("(%d, %d)\n", v.X(), v.Y())
+
+	// Output:
+	// (12, -28)
+}
