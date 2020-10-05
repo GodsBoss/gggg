@@ -56,6 +56,11 @@ func Left() Vector {
 	return FromXY(-1, 0)
 }
 
+// RotateClockwise takes a vector and rotates it clockwise.
+func RotateClockwise(v Vector) Vector {
+	return FromXY(-v.Y(), v.X())
+}
+
 // Add creates a new vector which is the sum of all the vectors passed to this
 // function. If no vector is given, the zero vector is returned.
 func Add(vectors ...Vector) Vector {
