@@ -73,6 +73,10 @@ func (g *game) Logic() dominit.Logic {
 }
 
 func (g *game) Tick(ms int) {
+	for i := range g.objects {
+		g.objects[i].Tick(ms)
+	}
+
 	camSpeed := 10.0
 
 	x, y := g.cam.Position()
@@ -216,8 +220,8 @@ func (obj *object) Shadow() world25d.Object {
 	}
 }
 
-const gravity float64 = -0.01
-const jumpSpeed float64 = 1.0
+const gravity float64 = -0.05
+const jumpSpeed float64 = 3.0
 
 type objects []object
 
