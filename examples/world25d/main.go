@@ -54,6 +54,9 @@ type game struct {
 
 	rotLeft  int
 	rotRight int
+
+	higher int
+	lower  int
 }
 
 func (g *game) TicksPerSecond() int {
@@ -81,6 +84,9 @@ func (g *game) Tick(ms int) {
 
 	pos := transform.Transform(m.VectorFromCartesian(0, 0))
 	g.cam.SetPosition(pos.X(), pos.Y())
+
+	zSpeed := 0.5
+	_ = g.cam.SetHeight(g.cam.Height() + float64(g.higher-g.lower)*zSpeed)
 }
 
 func (g *game) ReceiveKeyEvent(event interaction.KeyEvent) {
@@ -98,6 +104,10 @@ func (g *game) ReceiveKeyEvent(event interaction.KeyEvent) {
 			g.rotLeft = 1
 		case "e":
 			g.rotRight = 1
+		case "r":
+			g.higher = 1
+		case "f":
+			g.lower = 1
 		}
 	}
 	if event.Type == interaction.KeyUp {
@@ -114,6 +124,10 @@ func (g *game) ReceiveKeyEvent(event interaction.KeyEvent) {
 			g.rotLeft = 0
 		case "e":
 			g.rotRight = 0
+		case "r":
+			g.higher = 0
+		case "f":
+			g.lower = 0
 		}
 	}
 }
