@@ -1,7 +1,6 @@
 package main
 
 import (
-	"math"
 	"math/rand"
 	"sort"
 
@@ -17,10 +16,12 @@ func main() {
 	win, _ := dom.GlobalWindow()
 	doc, _ := win.Document()
 	sprite, _ := doc.CreateImageElement("../assets/small_square.png")
+	shadow, _ := doc.CreateImageElement("../assets/shadow.png")
 
 	dominit.Run(
 		&game{
 			sprite:  sprite,
+			shadow:  shadow,
 			cam:     world25d.NewCamera(),
 			objects: createRandomObjects(100, -800, -600, 1600, 1200),
 		},
@@ -28,14 +29,13 @@ func main() {
 	<-make(chan struct{}, 0)
 }
 
-func createRandomObjects(count int, minX, minY, maxX, maxY int) []world25d.Object {
-	objects := make([]world25d.Object, count)
+func createRandomObjects(count int, minX, minY, maxX, maxY int) []object {
+	objects := make(objects, count)
 	for i := 0; i < count; i++ {
-		objects[i] = world25d.Object{
-			X:        float64(rand.Intn(maxX-minX) + minX),
-			Y:        float64(rand.Intn(maxY-minY) + minY),
-			Z:        float64(rand.Intn(100)),
-			Rotation: rand.Float64() * math.Pi,
+		objects[i] = object{
+			X: float64(rand.Intn(maxX-minX) + minX),
+			Y: float64(rand.Intn(maxY-minY) + minY),
+			Z: float64(rand.Intn(20)),
 		}
 	}
 	return objects
@@ -43,10 +43,11 @@ func createRandomObjects(count int, minX, minY, maxX, maxY int) []world25d.Objec
 
 type game struct {
 	sprite *dom.Image
+	shadow *dom.Image
 	output *dom.Context2D
 
 	cam     world25d.Camera
-	objects []world25d.Object
+	objects objects
 
 	left  int
 	right int
@@ -160,15 +161,78 @@ func (g *game) SetOutput(ctx2d *dom.Context2D) {
 func (g *game) Render() {
 	g.output.ClearRect(0, 0, 800, 600)
 
-	pObjs := world25d.ViewObjects(g.cam, g.objects...)
+	pObjs := world25d.ViewObjects(g.cam, g.objects.Shadows()...)
 	sort.Sort(pObjs)
 
 	for i := range pObjs {
 		// We add (400, 300) here to have (0, 0) be the center of the viewport.
-		g.output.DrawImage(g.sprite, 0, 0, 20, 20, int(pObjs[i].X)+400, int(pObjs[i].ComputedY())+300, 20, 20)
+		// We add (-10, -5) here, because that is the bottom center of the objects.
+		g.output.DrawImage(g.shadow, 0, 0, 20, 5, int(pObjs[i].X)+400-10, int(pObjs[i].ComputedY())+300-5, 20, 5)
+	}
+
+	pObjs = world25d.ViewObjects(g.cam, g.objects.ToWorld25dObjects()...)
+	sort.Sort(pObjs)
+
+	for i := range pObjs {
+		// We add (400, 300) here to have (0, 0) be the center of the viewport.
+		// We add (-10, -20) here, because that is the bottom center of the objects.
+		g.output.DrawImage(g.sprite, 0, 0, 20, 20, int(pObjs[i].X)+400-10, int(pObjs[i].ComputedY())+300-20, 20, 20)
 	}
 }
 
 func (g *game) Scale(availableWidth, availableHeight int) (realWidth, realHeight int, xScale, yScale float64) {
 	return 800, 600, 1, 1
+}
+
+type object struct {
+	X      float64
+	Y      float64
+	Z      float64
+	ZSpeed float64
+}
+
+func (obj *object) Tick(ms int) {
+	obj.ZSpeed += gravity
+	obj.Z += obj.ZSpeed
+	if obj.Z < 0 {
+		obj.Z = 0
+		obj.ZSpeed = jumpSpeed
+	}
+}
+
+func (obj *object) ToWorld25dObject() world25d.Object {
+	return world25d.Object{
+		X: obj.X,
+		Y: obj.Y,
+		Z: obj.Z,
+	}
+}
+
+func (obj *object) Shadow() world25d.Object {
+	return world25d.Object{
+		X: obj.X,
+		Y: obj.Y,
+		Z: 0,
+	}
+}
+
+const gravity float64 = -0.01
+const jumpSpeed float64 = 1.0
+
+type objects []object
+
+func (objs objects) ToWorld25dObjects() []world25d.Object {
+	result := make([]world25d.Object, len(objs))
+	for i := range objs {
+		result[i] = objs[i].ToWorld25dObject()
+	}
+	return result
+}
+
+func (objs objects) Shadows() []world25d.Object {
+	result := make([]world25d.Object, len(objs))
+	for i := range objs {
+		result[i] = objs[i].Shadow()
+	}
+	return result
 }
