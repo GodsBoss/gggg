@@ -3,6 +3,7 @@ package main
 import (
 	"math"
 	"math/rand"
+	"sort"
 
 	"github.com/GodsBoss/gggg/pkg/dom"
 	"github.com/GodsBoss/gggg/pkg/dominit"
@@ -159,11 +160,12 @@ func (g *game) SetOutput(ctx2d *dom.Context2D) {
 func (g *game) Render() {
 	g.output.ClearRect(0, 0, 800, 600)
 
-	for i := range g.objects {
-		pObj := g.cam.View(g.objects[i])
+	pObjs := world25d.ViewObjects(g.cam, g.objects...)
+	sort.Sort(pObjs)
 
+	for i := range pObjs {
 		// We add (400, 300) here to have (0, 0) be the center of the viewport.
-		g.output.DrawImage(g.sprite, 0, 0, 20, 20, int(pObj.X)+400, int(pObj.Y)+300, 20, 20)
+		g.output.DrawImage(g.sprite, 0, 0, 20, 20, int(pObjs[i].X)+400, int(pObjs[i].Y)+300, 20, 20)
 	}
 }
 
