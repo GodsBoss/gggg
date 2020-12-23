@@ -3,6 +3,8 @@ package world25d
 import (
 	"fmt"
 	"math"
+
+	m "github.com/GodsBoss/go-pkg/affinematrix2d"
 )
 
 type Camera interface {
@@ -36,7 +38,7 @@ func NewCamera() Camera {
 		rotation: CameraDefaultRotation,
 		angle:    CameraDefaultAngle,
 	}
-	cam.calculateMatrix()
+	cam.calculateTransformation()
 	return cam
 }
 
@@ -68,15 +70,15 @@ type camera struct {
 	angle float64
 
 	// m is the matrix used for transformations.
-	m matrix
+	m m.Transformation
 }
 
 func (cam *camera) View(obj Object) PerceivedObject {
-	x, y := cam.m.apply(obj.X, obj.Y)
+	pos := cam.m.Transform(m.VectorFromCartesian(obj.X, obj.Y))
 
 	return PerceivedObject{
-		X:        x,
-		Y:        y,
+		X:        pos.X(),
+		Y:        pos.Y(),
 		Rotation: obj.Rotation - cam.rotation,
 	}
 }
@@ -88,7 +90,7 @@ func (cam *camera) Position() (x, y float64) {
 func (cam *camera) SetPosition(x, y float64) {
 	cam.x = x
 	cam.y = y
-	cam.calculateMatrix()
+	cam.calculateTransformation()
 }
 
 func (cam *camera) Height() float64 {
@@ -123,9 +125,9 @@ func (cam *camera) SetAngle(angle float64) error {
 	return nil
 }
 
-func (cam *camera) calculateMatrix() {
-	cam.m = multiplyMatrices(
-		rotationMatrix(cam.rotation),
-		translationMatrix(-cam.x, -cam.y),
+func (cam *camera) calculateTransformation() {
+	cam.m = m.Combine(
+		m.Rotation(-cam.rotation),
+		m.Translation(-cam.x, -cam.y),
 	)
 }
