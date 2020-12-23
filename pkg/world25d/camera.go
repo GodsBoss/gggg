@@ -102,6 +102,7 @@ func (cam *camera) SetHeight(h float64) error {
 		return fmt.Errorf("height must not be < 0")
 	}
 	cam.z = h
+	cam.calculateTransformation()
 	return nil
 }
 
@@ -111,6 +112,7 @@ func (cam *camera) Rotation() float64 {
 
 func (cam *camera) SetRotation(r float64) {
 	cam.rotation = r
+	cam.calculateTransformation()
 }
 
 func (cam *camera) Angle() float64 {
@@ -122,6 +124,7 @@ func (cam *camera) SetAngle(angle float64) error {
 		return fmt.Errorf("angle must be in the interval [0, PI/2)")
 	}
 	cam.angle = angle
+	cam.calculateTransformation()
 	return nil
 }
 
