@@ -124,5 +124,8 @@ func (cam *camera) SetAngle(angle float64) error {
 }
 
 func (cam *camera) calculateMatrix() {
-	cam.m = translationMatrix(-cam.x, -cam.y)
+	cam.m = multiplyMatrices(
+		rotationMatrix(cam.rotation),
+		translationMatrix(-cam.x, -cam.y),
+	)
 }

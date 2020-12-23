@@ -1,5 +1,7 @@
 package world25d
 
+import "math"
+
 // matrix represents the following matrix:
 //    a b c
 // (  d e f )
@@ -29,6 +31,15 @@ func translationMatrix(tx, ty float64) matrix {
 		c: tx,
 		e: 1,
 		f: ty,
+	}
+}
+
+func rotationMatrix(angle float64) matrix {
+	return matrix{
+		a: math.Cos(angle),
+		b: math.Sin(angle),
+		d: -math.Sin(angle),
+		e: math.Cos(angle),
 	}
 }
 

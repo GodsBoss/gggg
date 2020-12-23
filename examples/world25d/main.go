@@ -8,6 +8,8 @@ import (
 	"github.com/GodsBoss/gggg/pkg/dominit"
 	"github.com/GodsBoss/gggg/pkg/interaction"
 	"github.com/GodsBoss/gggg/pkg/world25d"
+
+	m "github.com/GodsBoss/go-pkg/affinematrix2d"
 )
 
 func main() {
@@ -49,6 +51,9 @@ type game struct {
 	right int
 	down  int
 	up    int
+
+	rotLeft  int
+	rotRight int
 }
 
 func (g *game) TicksPerSecond() int {
@@ -64,10 +69,18 @@ func (g *game) Tick(ms int) {
 
 	x, y := g.cam.Position()
 
-	g.cam.SetPosition(
-		x+float64(g.right-g.left)*camSpeed,
-		y+float64(g.down-g.up)*camSpeed,
+	rotSpeed := 0.05
+	r := g.cam.Rotation() + rotSpeed*float64(g.rotRight-g.rotLeft)
+	g.cam.SetRotation(r)
+
+	transform := m.Combine(
+		m.Translation(x, y),
+		m.Rotation(r),
+		m.Translation(float64(g.right-g.left)*camSpeed, float64(g.down-g.up)*camSpeed),
 	)
+
+	pos := transform.Transform(m.VectorFromCartesian(0, 0))
+	g.cam.SetPosition(pos.X(), pos.Y())
 }
 
 func (g *game) ReceiveKeyEvent(event interaction.KeyEvent) {
@@ -81,6 +94,10 @@ func (g *game) ReceiveKeyEvent(event interaction.KeyEvent) {
 			g.down = 1
 		case "d":
 			g.right = 1
+		case "q":
+			g.rotLeft = 1
+		case "e":
+			g.rotRight = 1
 		}
 	}
 	if event.Type == interaction.KeyUp {
@@ -93,6 +110,10 @@ func (g *game) ReceiveKeyEvent(event interaction.KeyEvent) {
 			g.down = 0
 		case "d":
 			g.right = 0
+		case "q":
+			g.rotLeft = 0
+		case "e":
+			g.rotRight = 0
 		}
 	}
 }
