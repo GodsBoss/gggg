@@ -94,7 +94,7 @@ func (g *game) Tick(ms int) {
 	pos := transform.Transform(m.VectorFromCartesian(0, 0))
 	g.cam.SetPosition(pos.X(), pos.Y())
 
-	zSpeed := 0.5
+	zSpeed := 2.5
 	_ = g.cam.SetHeight(g.cam.Height() + float64(g.higher-g.lower)*zSpeed)
 
 	angleSpeed := 0.1
