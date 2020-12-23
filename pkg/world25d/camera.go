@@ -131,6 +131,7 @@ func (cam *camera) SetAngle(angle float64) error {
 func (cam *camera) calculateTransformation() {
 	cam.m = m.Combine(
 		m.Scale(100.0/cam.z, 100.0/cam.z),
+		m.Scale(1, math.Cos(cam.angle)),
 		m.Rotation(-cam.rotation),
 		m.Translation(-cam.x, -cam.y),
 	)

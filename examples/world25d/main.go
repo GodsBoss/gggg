@@ -57,6 +57,9 @@ type game struct {
 
 	higher int
 	lower  int
+
+	angleHorizon int
+	angleDown    int
 }
 
 func (g *game) TicksPerSecond() int {
@@ -87,6 +90,9 @@ func (g *game) Tick(ms int) {
 
 	zSpeed := 0.5
 	_ = g.cam.SetHeight(g.cam.Height() + float64(g.higher-g.lower)*zSpeed)
+
+	angleSpeed := 0.1
+	_ = g.cam.SetAngle(g.cam.Angle() + float64(g.angleHorizon-g.angleDown)*angleSpeed)
 }
 
 func (g *game) ReceiveKeyEvent(event interaction.KeyEvent) {
@@ -108,6 +114,10 @@ func (g *game) ReceiveKeyEvent(event interaction.KeyEvent) {
 			g.higher = 1
 		case "f":
 			g.lower = 1
+		case "g":
+			g.angleHorizon = 1
+		case "t":
+			g.angleDown = 1
 		}
 	}
 	if event.Type == interaction.KeyUp {
@@ -128,6 +138,10 @@ func (g *game) ReceiveKeyEvent(event interaction.KeyEvent) {
 			g.higher = 0
 		case "f":
 			g.lower = 0
+		case "g":
+			g.angleHorizon = 0
+		case "t":
+			g.angleDown = 0
 		}
 	}
 }
