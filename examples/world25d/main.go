@@ -165,7 +165,7 @@ func (g *game) Render() {
 
 	for i := range pObjs {
 		// We add (400, 300) here to have (0, 0) be the center of the viewport.
-		g.output.DrawImage(g.sprite, 0, 0, 20, 20, int(pObjs[i].X)+400, int(pObjs[i].Y)+300, 20, 20)
+		g.output.DrawImage(g.sprite, 0, 0, 20, 20, int(pObjs[i].X)+400, int(pObjs[i].ComputedY())+300, 20, 20)
 	}
 }
 

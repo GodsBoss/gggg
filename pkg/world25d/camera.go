@@ -76,10 +76,13 @@ type camera struct {
 func (cam *camera) View(obj Object) PerceivedObject {
 	pos := cam.m.Transform(m.VectorFromCartesian(obj.X, obj.Y))
 
+	zOffset := -math.Sin(cam.angle) * obj.Z * 100.0 / cam.z
+
 	return PerceivedObject{
-		X:        pos.X(),
-		Y:        pos.Y(),
-		Rotation: obj.Rotation - cam.rotation,
+		X:             pos.X(),
+		Y:             pos.Y(),
+		YHeightOffset: zOffset,
+		Rotation:      obj.Rotation - cam.rotation,
 	}
 }
 

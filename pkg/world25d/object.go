@@ -16,9 +16,14 @@ func ViewObjects(cam Camera, objs ...Object) PerceivedObjects {
 }
 
 type PerceivedObject struct {
-	X        float64
-	Y        float64
-	Rotation float64
+	X             float64
+	Y             float64
+	YHeightOffset float64
+	Rotation      float64
+}
+
+func (po PerceivedObject) ComputedY() float64 {
+	return po.Y + po.YHeightOffset
 }
 
 type PerceivedObjects []PerceivedObject
