@@ -20,6 +20,7 @@ type PerceivedObject struct {
 	Y             float64
 	YHeightOffset float64
 	Rotation      float64
+	Scale         float64
 }
 
 func (po PerceivedObject) ComputedY() float64 {
