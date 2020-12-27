@@ -184,14 +184,19 @@ func (g *game) Render() {
 	sort.Sort(pObjs)
 
 	for i := range pObjs {
+		scale := map[bool]int{
+			false: 1,
+			true:  2,
+		}[pObjs[i].Scale > 0.8]
 		r := math.Mod(pObjs[i].Rotation, math.Pi*2)
 		if r < 0 {
 			r += math.Pi * 2
 		}
-		sOffset := int(math.Floor(2.0 * r / (math.Pi))) // == 4 * r / (PI * 2)
+		spr := face.get(scale, int(math.Floor(2.0*r/(math.Pi))))
+
 		// We add (400, 300) here to have (0, 0) be the center of the viewport.
-		// We add (-10, -20) here, because that is the bottom center of the objects.
-		g.output.DrawImage(g.sprite, 1+sOffset*21, 1, 20, 20, int(pObjs[i].X)+400-10, int(pObjs[i].ComputedY())+300-20, 20, 20)
+		// Also, the size of the sprite is taken into account, the position is the bottom center of it.
+		g.output.DrawImage(g.sprite, spr.X, spr.Y, spr.Width, spr.Height, int(pObjs[i].X)+400-spr.Width/2, int(pObjs[i].ComputedY())+300-spr.Height, spr.Width, spr.Height)
 	}
 }
 
@@ -252,4 +257,76 @@ func (objs objects) Shadows() []world25d.Object {
 		result[i] = objs[i].Shadow()
 	}
 	return result
+}
+
+type sprite map[int]map[int]spriteInfo
+
+func (s sprite) get(scale int, rotation int) spriteInfo {
+	_, ok := s[scale]
+	if !ok {
+		return spriteInfo{}
+	}
+	return s[scale][rotation]
+}
+
+type spriteInfo struct {
+	X      int
+	Y      int
+	Width  int
+	Height int
+}
+
+var face = sprite{
+	1: {
+		0: {
+			X:      1,
+			Y:      22,
+			Width:  10,
+			Height: 10,
+		},
+		1: {
+			X:      12,
+			Y:      22,
+			Width:  10,
+			Height: 10,
+		},
+		2: {
+			X:      23,
+			Y:      22,
+			Width:  10,
+			Height: 10,
+		},
+		3: {
+			X:      34,
+			Y:      22,
+			Width:  10,
+			Height: 10,
+		},
+	},
+	2: {
+		0: {
+			X:      1,
+			Y:      1,
+			Width:  20,
+			Height: 20,
+		},
+		1: {
+			X:      22,
+			Y:      1,
+			Width:  20,
+			Height: 20,
+		},
+		2: {
+			X:      43,
+			Y:      1,
+			Width:  20,
+			Height: 20,
+		},
+		3: {
+			X:      64,
+			Y:      1,
+			Width:  20,
+			Height: 20,
+		},
+	},
 }
