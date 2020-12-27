@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"math/rand"
 	"sort"
 
@@ -34,9 +35,10 @@ func createRandomObjects(count int, minX, minY, maxX, maxY int) []object {
 	objects := make(objects, count)
 	for i := 0; i < count; i++ {
 		objects[i] = object{
-			X: float64(rand.Intn(maxX-minX) + minX),
-			Y: float64(rand.Intn(maxY-minY) + minY),
-			Z: float64(rand.Intn(20)),
+			X:        float64(rand.Intn(maxX-minX) + minX),
+			Y:        float64(rand.Intn(maxY-minY) + minY),
+			Z:        float64(rand.Intn(20)),
+			Rotation: rand.Float64() * 2 * math.Pi,
 		}
 	}
 	return objects
@@ -182,9 +184,14 @@ func (g *game) Render() {
 	sort.Sort(pObjs)
 
 	for i := range pObjs {
+		r := math.Mod(pObjs[i].Rotation, math.Pi*2)
+		if r < 0 {
+			r += math.Pi * 2
+		}
+		sOffset := int(math.Floor(2.0 * r / (math.Pi))) // == 4 * r / (PI * 2)
 		// We add (400, 300) here to have (0, 0) be the center of the viewport.
 		// We add (-10, -20) here, because that is the bottom center of the objects.
-		g.output.DrawImage(g.sprite, 1, 1, 20, 20, int(pObjs[i].X)+400-10, int(pObjs[i].ComputedY())+300-20, 20, 20)
+		g.output.DrawImage(g.sprite, 1+sOffset*21, 1, 20, 20, int(pObjs[i].X)+400-10, int(pObjs[i].ComputedY())+300-20, 20, 20)
 	}
 }
 
@@ -193,10 +200,11 @@ func (g *game) Scale(availableWidth, availableHeight int) (realWidth, realHeight
 }
 
 type object struct {
-	X      float64
-	Y      float64
-	Z      float64
-	ZSpeed float64
+	X        float64
+	Y        float64
+	Z        float64
+	ZSpeed   float64
+	Rotation float64
 }
 
 func (obj *object) Tick(ms int) {
@@ -210,9 +218,10 @@ func (obj *object) Tick(ms int) {
 
 func (obj *object) ToWorld25dObject() world25d.Object {
 	return world25d.Object{
-		X: obj.X,
-		Y: obj.Y,
-		Z: obj.Z,
+		X:        obj.X,
+		Y:        obj.Y,
+		Z:        obj.Z,
+		Rotation: obj.Rotation,
 	}
 }
 
