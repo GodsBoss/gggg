@@ -16,7 +16,7 @@ import (
 func main() {
 	win, _ := dom.GlobalWindow()
 	doc, _ := win.Document()
-	sprite, _ := doc.CreateImageElement("../assets/small_square.png")
+	sprite, _ := doc.CreateImageElement("../assets/facesprite.png")
 	shadow, _ := doc.CreateImageElement("../assets/shadow.png")
 
 	dominit.Run(
@@ -184,7 +184,7 @@ func (g *game) Render() {
 	for i := range pObjs {
 		// We add (400, 300) here to have (0, 0) be the center of the viewport.
 		// We add (-10, -20) here, because that is the bottom center of the objects.
-		g.output.DrawImage(g.sprite, 0, 0, 20, 20, int(pObjs[i].X)+400-10, int(pObjs[i].ComputedY())+300-20, 20, 20)
+		g.output.DrawImage(g.sprite, 1, 1, 20, 20, int(pObjs[i].X)+400-10, int(pObjs[i].ComputedY())+300-20, 20, 20)
 	}
 }
 
