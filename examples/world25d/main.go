@@ -7,6 +7,7 @@ import (
 	"github.com/GodsBoss/gggg/pkg/dom"
 	"github.com/GodsBoss/gggg/pkg/dominit"
 	"github.com/GodsBoss/gggg/pkg/interaction"
+	"github.com/GodsBoss/gggg/pkg/rendering/canvas2drendering"
 	"github.com/GodsBoss/gggg/pkg/world25d"
 
 	m "github.com/GodsBoss/go-pkg/affinematrix2d"
@@ -164,6 +165,9 @@ func (g *game) SetOutput(ctx2d *dom.Context2D) {
 
 func (g *game) Render() {
 	g.output.ClearRect(0, 0, 800, 600)
+
+	bg, _ := canvas2drendering.MonochromeBackground("#efe")
+	bg.Render(g.output)
 
 	pObjs := world25d.ViewObjects(g.cam, g.objects.Shadows()...)
 	sort.Sort(pObjs)
