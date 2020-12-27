@@ -60,3 +60,29 @@ func (ctx2D *Context2D) Size() (w int, h int) {
 	canv := ctx2D.value.Get("canvas")
 	return canv.Get("width").Int(), canv.Get("height").Int()
 }
+
+func (ctx2D *Context2D) SetFillStyle(fillStyle CanvasFillStyle) {
+	ctx2D.value.Set("fillStyle", fillStyle.color())
+}
+
+func (ctx2D *Context2D) FillRect(x, y, w, h int) {
+	ctx2D.value.Call("fillRect", x, y, w, h)
+}
+
+// TODO: Support other fill styles.
+
+type CanvasFillStyle interface {
+	color() string
+}
+
+// NewColorCanvasFillStyle creates a monochrome canvas fill style. If the color
+// value is invalid, an error is returned (not implemented yet).
+func NewColorCanvasFillStyle(color string) (CanvasFillStyle, error) {
+	return colorCanvasFillStyle(color), nil
+}
+
+type colorCanvasFillStyle string
+
+func (style colorCanvasFillStyle) color() string {
+	return string(style)
+}
