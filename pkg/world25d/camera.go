@@ -82,7 +82,7 @@ func (cam *camera) View(obj Object) PerceivedObject {
 		X:             pos.X(),
 		Y:             pos.Y(),
 		YHeightOffset: zOffset,
-		Rotation:      obj.Rotation - cam.rotation,
+		Rotation:      obj.Rotation + cam.rotation,
 		Scale:         100.0 / cam.z,
 	}
 }
