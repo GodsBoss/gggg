@@ -17,15 +17,37 @@ import (
 func main() {
 	win, _ := dom.GlobalWindow()
 	doc, _ := win.Document()
-	sprite, _ := doc.CreateImageElement("../assets/facesprite.png")
-	shadow, _ := doc.CreateImageElement("../assets/shadow.png")
+	faceImage, _ := doc.CreateImageElement("../assets/facesprite.png")
+
+	spriteMap := canvas2drendering.NewSpriteMap(faceImage)
+	face := spriteMap.AddSpriteSpecification(
+		canvas2drendering.MergeSpriteSpecifications(
+			canvas2drendering.CreateSpriteSpecs(1, 10, 10, 4, 1, 22, 11, 0),
+			canvas2drendering.CreateSpriteSpecs(2, 20, 20, 4, 1, 1, 21, 0),
+		),
+	)
+
+	shadow := spriteMap.AddSpriteSpecification(
+		canvas2drendering.SpriteSpecification{
+			{
+				Scale:    1,
+				Rotation: 0,
+			}: {
+				X:      45,
+				Y:      22,
+				Width:  20,
+				Height: 5,
+			},
+		},
+	)
 
 	dominit.Run(
 		&game{
-			sprite:  sprite,
-			shadow:  shadow,
-			cam:     world25d.NewCamera(),
-			objects: createRandomObjects(100, -800, -600, 1600, 1200),
+			spriteMap: spriteMap,
+			face:      face,
+			shadow:    shadow,
+			cam:       world25d.NewCamera(),
+			objects:   createRandomObjects(100, -800, -600, 1600, 1200),
 		},
 	)
 	<-make(chan struct{}, 0)
@@ -45,8 +67,11 @@ func createRandomObjects(count int, minX, minY, maxX, maxY int) []object {
 }
 
 type game struct {
-	sprite *dom.Image
-	shadow *dom.Image
+	spriteMap canvas2drendering.SpriteMap
+
+	face   canvas2drendering.SpriteKey
+	shadow canvas2drendering.SpriteKey
+
 	output *dom.Context2D
 
 	cam     world25d.Camera
@@ -174,10 +199,11 @@ func (g *game) Render() {
 	pObjs := world25d.ViewObjects(g.cam, g.objects.Shadows()...)
 	sort.Sort(pObjs)
 
+	shAttr := canvas2drendering.SpriteAttributes{Scale: 1, Rotation: 0}
 	for i := range pObjs {
 		// We add (400, 300) here to have (0, 0) be the center of the viewport.
 		// We add (-10, -5) here, because that is the bottom center of the objects.
-		g.output.DrawImage(g.shadow, 0, 0, 20, 5, int(pObjs[i].X)+400-10, int(pObjs[i].ComputedY())+300-5, 20, 5)
+		g.spriteMap.CreateSprite(g.shadow, shAttr, int(pObjs[i].X)+400-10, int(pObjs[i].ComputedY())+300-5).Render(g.output)
 	}
 
 	pObjs = world25d.ViewObjects(g.cam, g.objects.ToWorld25dObjects()...)
@@ -192,11 +218,16 @@ func (g *game) Render() {
 		if r < 0 {
 			r += math.Pi * 2
 		}
-		spr := face.get(scale, int(math.Floor(2.0*r/(math.Pi))))
+		fAttr := canvas2drendering.SpriteAttributes{Scale: scale, Rotation: int(math.Floor(2.0 * r / (math.Pi)))}
+
+		size := map[int]int{
+			1: 10,
+			2: 20,
+		}[scale]
+		g.spriteMap.CreateSprite(g.face, fAttr, int(pObjs[i].X)+400-size/2, int(pObjs[i].ComputedY())+300-size).Render(g.output)
 
 		// We add (400, 300) here to have (0, 0) be the center of the viewport.
 		// Also, the size of the sprite is taken into account, the position is the bottom center of it.
-		g.output.DrawImage(g.sprite, spr.X, spr.Y, spr.Width, spr.Height, int(pObjs[i].X)+400-spr.Width/2, int(pObjs[i].ComputedY())+300-spr.Height, spr.Width, spr.Height)
 	}
 }
 
@@ -257,76 +288,4 @@ func (objs objects) Shadows() []world25d.Object {
 		result[i] = objs[i].Shadow()
 	}
 	return result
-}
-
-type sprite map[int]map[int]spriteInfo
-
-func (s sprite) get(scale int, rotation int) spriteInfo {
-	_, ok := s[scale]
-	if !ok {
-		return spriteInfo{}
-	}
-	return s[scale][rotation]
-}
-
-type spriteInfo struct {
-	X      int
-	Y      int
-	Width  int
-	Height int
-}
-
-var face = sprite{
-	1: {
-		0: {
-			X:      1,
-			Y:      22,
-			Width:  10,
-			Height: 10,
-		},
-		1: {
-			X:      12,
-			Y:      22,
-			Width:  10,
-			Height: 10,
-		},
-		2: {
-			X:      23,
-			Y:      22,
-			Width:  10,
-			Height: 10,
-		},
-		3: {
-			X:      34,
-			Y:      22,
-			Width:  10,
-			Height: 10,
-		},
-	},
-	2: {
-		0: {
-			X:      1,
-			Y:      1,
-			Width:  20,
-			Height: 20,
-		},
-		1: {
-			X:      22,
-			Y:      1,
-			Width:  20,
-			Height: 20,
-		},
-		2: {
-			X:      43,
-			Y:      1,
-			Width:  20,
-			Height: 20,
-		},
-		3: {
-			X:      64,
-			Y:      1,
-			Width:  20,
-			Height: 20,
-		},
-	},
 }
