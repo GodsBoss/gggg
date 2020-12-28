@@ -27,3 +27,12 @@ type RenderFunc func(*dom.Context2D)
 func (f RenderFunc) Render(ctx *dom.Context2D) {
 	f(ctx)
 }
+
+type nopRenderable struct{}
+
+func (r nopRenderable) Render(ctx *dom.Context2D) {}
+
+// NopRenderable returns a renderable that does nothing.
+func NopRenderable() Renderable {
+	return nopRenderable{}
+}
