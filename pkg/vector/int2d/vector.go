@@ -78,7 +78,7 @@ func Add(vectors ...Vector) Vector {
 }
 
 // Multiply creates a new vector by multiplying both horizontal and vertical
-// component of v with f.
+// components of v with f.
 func Multiply(v Vector, f int) Vector {
 	return Vector{
 		x: v.x * f,
