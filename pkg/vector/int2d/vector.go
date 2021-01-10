@@ -85,3 +85,12 @@ func Multiply(v Vector, f int) Vector {
 		y: v.y * f,
 	}
 }
+
+// Divide creates a new vector by dividing both horizontal and vertical
+// components of v by d. Rounds if necessary.
+func Divide(v Vector, d int) Vector {
+	return Vector{
+		x: v.x / d,
+		y: v.y / d,
+	}
+}

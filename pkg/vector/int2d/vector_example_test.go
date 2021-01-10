@@ -31,3 +31,11 @@ func ExampleMultiply() {
 	// Output:
 	// (12, -28)
 }
+
+func ExampleDivide() {
+	v := int2d.Divide(int2d.FromXY(8, -12), 4)
+	fmt.Printf("(%d, %d)\n", v.X(), v.Y())
+
+	// Output:
+	// (2, -3)
+}
