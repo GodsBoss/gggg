@@ -9,7 +9,7 @@ all: \
 	$(wasms) \
 	$(webfiles)
 
-dist/examples/wasm_exec.js: $(GOROOT)/misc/wasm/wasm_exec.js dist/examples
+dist/examples/wasm_exec.js: $(shell go env GOROOT)/misc/wasm/wasm_exec.js dist/examples
 	cp $< $@
 
 dist/examples/%/main.wasm: FORCE
