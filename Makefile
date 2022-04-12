@@ -38,6 +38,9 @@ docker-unittest:
 		golang:1.15.2 \
 		go test -v -cover ./pkg/...
 
+test:
+	go test -cover ./...
+
 clean:
 	rm -rf dist
 
@@ -45,6 +48,7 @@ clean:
 	all \
 	clean \
 	docker-unittest \
-	serve
+	serve \
+	test
 
 FORCE:
