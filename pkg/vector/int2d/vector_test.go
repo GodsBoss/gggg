@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/GodsBoss/gggg/pkg/vector/int2d"
+	"github.com/GodsBoss/gggg/v2/pkg/vector/int2d"
 )
 
 func TestZeroVector(t *testing.T) {

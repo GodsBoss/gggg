@@ -3,7 +3,7 @@
 package dom
 
 import (
-	"github.com/GodsBoss/gggg/pkg/errors"
+	"github.com/GodsBoss/gggg/v2/pkg/errors"
 
 	"syscall/js"
 )

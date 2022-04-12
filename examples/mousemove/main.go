@@ -3,9 +3,9 @@
 package main
 
 import (
-	"github.com/GodsBoss/gggg/pkg/dom"
-	"github.com/GodsBoss/gggg/pkg/dominit"
-	"github.com/GodsBoss/gggg/pkg/interaction"
+	"github.com/GodsBoss/gggg/v2/pkg/dom"
+	"github.com/GodsBoss/gggg/v2/pkg/dominit"
+	"github.com/GodsBoss/gggg/v2/pkg/interaction"
 )
 
 func main() {

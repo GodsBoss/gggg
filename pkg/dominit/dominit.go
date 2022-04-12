@@ -6,10 +6,10 @@ import (
 	"syscall/js"
 	"time"
 
-	"github.com/GodsBoss/gggg/pkg/dom"
-	"github.com/GodsBoss/gggg/pkg/errors"
-	"github.com/GodsBoss/gggg/pkg/interaction"
-	"github.com/GodsBoss/gggg/pkg/interaction/dominteraction"
+	"github.com/GodsBoss/gggg/v2/pkg/dom"
+	"github.com/GodsBoss/gggg/v2/pkg/errors"
+	"github.com/GodsBoss/gggg/v2/pkg/interaction"
+	"github.com/GodsBoss/gggg/v2/pkg/interaction/dominteraction"
 )
 
 // Game represents the game as a whole - configuration, rendering and logic.

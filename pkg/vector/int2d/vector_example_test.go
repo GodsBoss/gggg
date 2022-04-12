@@ -3,7 +3,7 @@ package int2d_test
 import (
 	"fmt"
 
-	"github.com/GodsBoss/gggg/pkg/vector/int2d"
+	"github.com/GodsBoss/gggg/v2/pkg/vector/int2d"
 )
 
 func ExampleFromXY() {

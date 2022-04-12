@@ -7,11 +7,11 @@ import (
 	"math/rand"
 	"sort"
 
-	"github.com/GodsBoss/gggg/pkg/dom"
-	"github.com/GodsBoss/gggg/pkg/dominit"
-	"github.com/GodsBoss/gggg/pkg/interaction"
-	"github.com/GodsBoss/gggg/pkg/rendering/canvas2drendering"
-	"github.com/GodsBoss/gggg/pkg/world25d"
+	"github.com/GodsBoss/gggg/v2/pkg/dom"
+	"github.com/GodsBoss/gggg/v2/pkg/dominit"
+	"github.com/GodsBoss/gggg/v2/pkg/interaction"
+	"github.com/GodsBoss/gggg/v2/pkg/rendering/canvas2drendering"
+	"github.com/GodsBoss/gggg/v2/pkg/world25d"
 
 	m "github.com/GodsBoss/go-pkg/affinematrix2d"
 )

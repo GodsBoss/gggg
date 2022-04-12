@@ -1,4 +1,4 @@
-module github.com/GodsBoss/gggg
+module github.com/GodsBoss/gggg/v2
 
 go 1.18
 

@@ -3,7 +3,7 @@
 package canvas2drendering
 
 import (
-	"github.com/GodsBoss/gggg/pkg/dom"
+	"github.com/GodsBoss/gggg/v2/pkg/dom"
 )
 
 type sprite struct {

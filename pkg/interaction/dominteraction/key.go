@@ -3,7 +3,7 @@
 package dominteraction
 
 import (
-	"github.com/GodsBoss/gggg/pkg/interaction"
+	"github.com/GodsBoss/gggg/v2/pkg/interaction"
 
 	"syscall/js"
 )
