@@ -1,2 +1,4 @@
 github.com/GodsBoss/go-pkg v0.0.0-20201223192137-c6f1afbfc199 h1:jamr9uUA6oSwMw/Rzr9lN/p1YnFm7zS2Czh27gYH44o=
 github.com/GodsBoss/go-pkg v0.0.0-20201223192137-c6f1afbfc199/go.mod h1:ZNyJbi9R1p3EPn2Alf3ROEniumscTZV6lArBrg8pcNc=
+golang.org/x/exp v0.0.0-20220407100705-7b9b53b0aca4 h1:K3x+yU+fbot38x5bQbU2QqUAVyYLEktdNH2GxZLnM3U=
+golang.org/x/exp v0.0.0-20220407100705-7b9b53b0aca4/go.mod h1:lgLbSvA5ygNOMpwM/9anMpWVlVJ7Z+cHWq/eFuinpGE=
