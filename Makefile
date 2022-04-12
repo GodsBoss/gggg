@@ -35,7 +35,7 @@ docker-unittest:
 		--rm \
 		-v $${PWD}:/root/gggg:ro \
 		--workdir /root/gggg \
-		golang:1.15.2 \
+		golang:1.18.0-alpine3.15 \
 		go test -v -cover ./pkg/...
 
 test:
