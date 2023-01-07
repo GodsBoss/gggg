@@ -40,6 +40,10 @@ func (instance *Instance[Data]) nextState(f func() (StateID, bool)) {
 		return
 	}
 
+	if next == instance.currentStateID {
+		return
+	}
+
 	instance.currentStateID = next
 	instance.currentState().Init(instance.data)
 }
