@@ -36,10 +36,12 @@ func (instance *Instance[Data]) ReceiveTickEvent(event tick.Event) {
 
 func (instance *Instance[Data]) nextState(f func() (StateID, bool)) {
 	next, ok := f()
-	if ok {
-		instance.currentStateID = next
-		instance.currentState().Init(instance.data)
+	if !ok {
+		return
 	}
+
+	instance.currentStateID = next
+	instance.currentState().Init(instance.data)
 }
 
 func (instance *Instance[Data]) unlockAfterLock() func() {
