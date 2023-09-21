@@ -1,3 +1,4 @@
+// Package keyboard contains a keyboard event.
 package keyboard
 
 import "strconv"
@@ -8,10 +9,16 @@ type Event struct {
 
 	Location Location
 
-	Alt   bool
-	Ctrl  bool
+	// Alt determines whether the Alt button was pressed.
+	Alt bool
+
+	// Ctrl determines whether the control button was pressed.
+	Ctrl bool
+
+	// Shift determines whether the shift button was pressed.
 	Shift bool
 
+	// Key represents the key that was pressed.
 	Key string
 }
 
