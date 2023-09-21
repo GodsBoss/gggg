@@ -7,6 +7,7 @@ import (
 )
 
 // State represents a game state. It does not hold any game data by itself, instead the data is passed to the event handlers.
+// All handlers are optional, e.g. they may be nil.
 type State[Data any] struct {
 	InitHandler              func(data Data)
 	ReceiveKeyEventHandler   func(data Data, event keyboard.Event) NextState
