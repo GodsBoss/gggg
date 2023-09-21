@@ -3,11 +3,11 @@
 package dominit
 
 import (
+	"errors"
 	"syscall/js"
 	"time"
 
 	"github.com/GodsBoss/gggg/v2/pkg/dom"
-	"github.com/GodsBoss/gggg/v2/pkg/errors"
 	"github.com/GodsBoss/gggg/v2/pkg/interaction"
 	"github.com/GodsBoss/gggg/v2/pkg/interaction/dominteraction"
 )
@@ -48,7 +48,7 @@ func Run(game Game) {
 func run(game Game) error {
 	ticksPerSecond := game.TicksPerSecond()
 	if ticksPerSecond <= 0 || ticksPerSecond > 1000 {
-		return errors.NewString("0 < ticksPerSecond <= 1000 is violated")
+		return errors.New("0 < ticksPerSecond <= 1000 is violated")
 	}
 	window, err := dom.GlobalWindow()
 	if err != nil {
