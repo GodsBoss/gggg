@@ -20,3 +20,8 @@ func (v Vector[T]) X() T {
 func (v Vector[T]) Y() T {
 	return v.y
 }
+
+// Zero returns a zero-value vector.
+func Zero[T any]() Vector[T] {
+	return Vector[T]{}
+}
