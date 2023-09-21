@@ -3,13 +3,13 @@
 package dominteraction
 
 import (
-	"github.com/GodsBoss/gggg/v2/pkg/interaction"
+	"github.com/GodsBoss/gggg/v2/pkg/event/keyboard"
 
 	"syscall/js"
 )
 
-func FromKeyEvent(typ interaction.KeyEventType, domEvent js.Value) interaction.KeyEvent {
-	return interaction.KeyEvent{
+func FromKeyEvent(typ keyboard.EventType, domEvent js.Value) keyboard.Event {
+	return keyboard.Event{
 		Type:  typ,
 		Alt:   domEvent.Get("altKey").Bool(),
 		Ctrl:  domEvent.Get("ctrlKey").Bool(),

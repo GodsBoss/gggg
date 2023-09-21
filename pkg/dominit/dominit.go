@@ -8,7 +8,8 @@ import (
 	"time"
 
 	"github.com/GodsBoss/gggg/v2/pkg/dom"
-	"github.com/GodsBoss/gggg/v2/pkg/interaction"
+	"github.com/GodsBoss/gggg/v2/pkg/event/keyboard"
+	"github.com/GodsBoss/gggg/v2/pkg/event/mouse"
 	"github.com/GodsBoss/gggg/v2/pkg/interaction/dominteraction"
 )
 
@@ -37,8 +38,8 @@ type Renderer interface {
 // Logic is the game logic.
 type Logic interface {
 	Tick(ms int)
-	ReceiveKeyEvent(event interaction.KeyEvent)
-	ReceiveMouseEvent(event interaction.MouseEvent)
+	ReceiveKeyEvent(event keyboard.Event)
+	ReceiveMouseEvent(event mouse.Event)
 }
 
 func Run(game Game) {
@@ -123,35 +124,35 @@ func passGameEvents(logic Logic, window *dom.Window, canvas *dom.Canvas, scaler 
 		window,
 		"keydown",
 		func(event js.Value) {
-			logic.ReceiveKeyEvent(dominteraction.FromKeyEvent(interaction.KeyDown, event))
+			logic.ReceiveKeyEvent(dominteraction.FromKeyEvent(keyboard.Down, event))
 		},
 	)
 	dom.AddEventListener(
 		window,
 		"keyup",
 		func(event js.Value) {
-			logic.ReceiveKeyEvent(dominteraction.FromKeyEvent(interaction.KeyUp, event))
+			logic.ReceiveKeyEvent(dominteraction.FromKeyEvent(keyboard.Up, event))
 		},
 	)
 	dom.AddEventListener(
 		canvas,
 		"mousedown",
 		func(event js.Value) {
-			logic.ReceiveMouseEvent(scaler.scale(dominteraction.FromMouseEvent(interaction.MouseDown, event)))
+			logic.ReceiveMouseEvent(scaler.scale(dominteraction.FromMouseEvent(mouse.Down, event)))
 		},
 	)
 	dom.AddEventListener(
 		canvas,
 		"mouseup",
 		func(event js.Value) {
-			logic.ReceiveMouseEvent(scaler.scale(dominteraction.FromMouseEvent(interaction.MouseUp, event)))
+			logic.ReceiveMouseEvent(scaler.scale(dominteraction.FromMouseEvent(mouse.Up, event)))
 		},
 	)
 	dom.AddEventListener(
 		canvas,
 		"mousemove",
 		func(event js.Value) {
-			logic.ReceiveMouseEvent(scaler.scale(dominteraction.FromMouseEvent(interaction.MouseMove, event)))
+			logic.ReceiveMouseEvent(scaler.scale(dominteraction.FromMouseEvent(mouse.Move, event)))
 		},
 	)
 }
@@ -161,7 +162,7 @@ type mouseEventCoordinateScaler struct {
 	yFactor float64
 }
 
-func (scaler *mouseEventCoordinateScaler) scale(ev interaction.MouseEvent) interaction.MouseEvent {
+func (scaler *mouseEventCoordinateScaler) scale(ev mouse.Event) mouse.Event {
 	ev.X = int(float64(ev.X) / scaler.xFactor)
 	ev.Y = int(float64(ev.Y) / scaler.yFactor)
 	return ev

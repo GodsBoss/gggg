@@ -3,20 +3,20 @@
 package dominteraction
 
 import (
-	"github.com/GodsBoss/gggg/v2/pkg/interaction"
+	"github.com/GodsBoss/gggg/v2/pkg/event/mouse"
 
 	"syscall/js"
 )
 
-func FromMouseEvent(typ interaction.MouseEventType, domEvent js.Value) interaction.MouseEvent {
+func FromMouseEvent(typ mouse.EventType, domEvent js.Value) mouse.Event {
 	target := domEvent.Get("target")
-	return interaction.MouseEvent{
+	return mouse.Event{
 		Type:   typ,
 		Alt:    domEvent.Get("altKey").Bool(),
 		Ctrl:   domEvent.Get("ctrlKey").Bool(),
 		Shift:  domEvent.Get("shiftKey").Bool(),
 		X:      domEvent.Get("clientX").Int() - target.Get("offsetLeft").Int(),
 		Y:      domEvent.Get("clientY").Int() - target.Get("offsetTop").Int(),
-		Button: domEvent.Get("button").Int(),
+		Button: mouse.Button(domEvent.Get("button").Int()),
 	}
 }
