@@ -44,18 +44,22 @@ const (
 	Move EventType = "move"
 )
 
+// IsButtonEvent returns whether this a button event (up or down).
 func IsButtonEvent(event Event) bool {
 	return IsUpEvent(event) || IsDownEvent(event)
 }
 
+// IsUpEvent returns whether a mouse button was released.
 func IsUpEvent(event Event) bool {
 	return event.Type == Up
 }
 
+// IsDownEvent returns whether a mouse button was pressed down.
 func IsDownEvent(event Event) bool {
 	return event.Type == Down
 }
 
+// IsMoveEvent returns whether this is a mouse movement.
 func IsMoveEvent(event Event) bool {
 	return event.Type == Move
 }
