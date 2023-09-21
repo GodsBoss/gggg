@@ -43,7 +43,7 @@ func Invert[T Numeric](v Vector[T]) Vector[T] {
 	return Cartesian(-v.x, -v.y)
 }
 
-// Scale scales v by f.
-func Scale[T Numeric](v Vector[T], f T) Vector[T] {
+// Scaled scales v by f.
+func Scaled[T Numeric](v Vector[T], f T) Vector[T] {
 	return Cartesian(f*v.x, f*v.y)
 }

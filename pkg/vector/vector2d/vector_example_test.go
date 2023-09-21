@@ -27,7 +27,7 @@ func ExampleInvert() {
 }
 
 func ExampleScale() {
-	scaled := vector2d.Scale(vector2d.Cartesian(3, -4), 5)
+	scaled := vector2d.Scaled(vector2d.Cartesian(3, -4), 5)
 	fmt.Printf("(%d, %d)\n", scaled.X(), scaled.Y())
 
 	// Output:
