@@ -9,10 +9,16 @@ type Template[Data any] struct {
 
 // NewInstance creates a new game instance from a game template.
 func (tmpl Template[Data]) NewInstance() *Instance[Data] {
+	var data Data
+	if tmpl.CreateData != nil {
+		data = tmpl.CreateData()
+	}
+
 	instance := &Instance[Data]{
 		states: tmpl.States,
-		data:   tmpl.CreateData(),
+		data:   data,
 	}
 	instance.nextState(SwitchState(tmpl.InitalStateID))
+
 	return instance
 }
