@@ -2,7 +2,7 @@ package vector2d
 
 import "golang.org/x/exp/constraints"
 
-func Cartesian[T Numeric](x T, y T) Vector[T] {
+func Cartesian[T any](x T, y T) Vector[T] {
 	return Vector[T]{
 		x: x,
 		y: y,
@@ -10,7 +10,7 @@ func Cartesian[T Numeric](x T, y T) Vector[T] {
 }
 
 // Vector is a value type representing a 2D vector. The zero value is the vector (0, 0).
-type Vector[T Numeric] struct {
+type Vector[T any] struct {
 	x T
 	y T
 }
