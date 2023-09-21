@@ -9,9 +9,9 @@ import (
 )
 
 // Instance represents a game instance. It wraps the data together with a bunch of states and
-// takes and passes events.
+// takes and passes events. The zero value is useless.
 type Instance[Data any] struct {
-	states         map[StateID]State[Data]
+	states         map[StateID]state[Data]
 	data           Data
 	currentStateID StateID
 	mutex          sync.Mutex
@@ -41,19 +41,18 @@ func (instance *Instance[Data]) ReceiveTickEvent(event tick.Event) {
 }
 
 // nextState sets the instance to the next state. If the next state differs from the current state,
-// the next state's Init() method is called.
+// the next state's Init() method is called. As Init() also potentially returns a state change,
+// the state could indeed change multiple times.
 func (instance *Instance[Data]) nextState(f func() (StateID, bool)) {
-	next, ok := f()
-	if !ok {
-		return
-	}
+	for {
+		next, ok := f()
+		if !ok {
+			return
+		}
 
-	if next == instance.currentStateID {
-		return
+		instance.currentStateID = next
+		f = instance.currentState().Init(instance.data)
 	}
-
-	instance.currentStateID = next
-	instance.currentState().Init(instance.data)
 }
 
 // unlockAfterLock locks the instance and returns a function that unlocks it. Use with defer for safe unlocking.
@@ -63,6 +62,6 @@ func (instance *Instance[Data]) unlockAfterLock() func() {
 }
 
 // currentState returns the current state.
-func (instance *Instance[Data]) currentState() State[Data] {
+func (instance *Instance[Data]) currentState() state[Data] {
 	return instance.states[instance.currentStateID]
 }
