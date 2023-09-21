@@ -7,7 +7,7 @@ func Cartesian[T any](x T, y T) Vector[T] {
 	}
 }
 
-// Vector is a value type representing a 2D vector. The zero value is the vector (0, 0).
+// Vector is a value type representing a 2D vector. The zero value is the vector with both components being the zero value.
 type Vector[T any] struct {
 	x T
 	y T
