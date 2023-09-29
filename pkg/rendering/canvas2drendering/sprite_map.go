@@ -51,7 +51,7 @@ type SpriteMap interface {
 
 	// CreateSprite creates a scales sprite. The scaling affects the resulting
 	// sprite size, but not its position.
-	CreateSprite(key SpriteKey, attr SpriteAttributes, x int, y int, scale int) Renderable
+	CreateSprite(key SpriteKey, attr SpriteAttributes, x int, y int, scale int, frame int) Renderable
 }
 
 // NewSpriteMap creates a new sprite map using the source image as the source for
@@ -76,7 +76,7 @@ func (sm *spriteMap) AddSpriteSpecification(specs SpriteSpecification) SpriteKey
 	return sKey
 }
 
-func (sm *spriteMap) CreateSprite(key SpriteKey, attr SpriteAttributes, x int, y int, scale int) Renderable {
+func (sm *spriteMap) CreateSprite(key SpriteKey, attr SpriteAttributes, x int, y int, scale int, frame int) Renderable {
 	dataByAttr, ok := sm.sprites[key]
 	if !ok {
 		return NopRenderable()
@@ -89,7 +89,7 @@ func (sm *spriteMap) CreateSprite(key SpriteKey, attr SpriteAttributes, x int, y
 		sourceImage:      sm.sourceImage,
 		width:            data.Width,
 		height:           data.Height,
-		sourceX:          data.X,
+		sourceX:          data.X + frame*data.Width, // Only horizontal, this may change later.
 		sourceY:          data.Y,
 		destinationX:     x,
 		destinationY:     y,
